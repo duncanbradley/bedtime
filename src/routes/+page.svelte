@@ -38,7 +38,14 @@
   {/each}
 </select>
 
+<div class="pie-container">
+<p class="annotation">{selected}</p>
 <PieChart {data} {selected} {backgroundColor}/>
+</div>
+
+<div>
+<p class="source">British adults. Excludes 'Don't know'. Source: YouGov (2022)</p>
+</div>
 
 <style>
   h1{
@@ -46,6 +53,16 @@
   }
   p{
     color: aliceblue;
+  }
+  .source{
+    color: white
+  }
+  .pie-container{
+    position:relative
+  }
+
+  .annotation{
+    position:absolute
   }
 
 </style>
