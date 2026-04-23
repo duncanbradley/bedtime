@@ -11,15 +11,15 @@
 		.sort(null)
 		.value(d => d.value);
 
-  const arcPath = arc()
+  const arcPath = $derived(arc()
 		.innerRadius(0)
-		.outerRadius(Math.min(width, height) / 2 - 1);
+		.outerRadius(Math.min(width, height) / 2 - 1))
 
-  const labelRadius = arcPath.outerRadius()() * 0.8;
+  const labelRadius = $derived(arcPath.outerRadius()() * 0.8)
 
-  const arcLabel = arc()
+  const arcLabel = $derived(arc()
 		.innerRadius(labelRadius)
-		.outerRadius(labelRadius);
+		.outerRadius(labelRadius))
 
   const arcs = $derived(pieLayout(data))
 
