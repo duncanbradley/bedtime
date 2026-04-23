@@ -7,39 +7,64 @@
   let options = [
 		{ id: "x1", text: "option1" },
 		{ id: "x2", text: "option2" },
-		{ id: "x3", text: "option3" }
+		{ id: "x3", text: "option3" },
+    { id: "x4", text: "option4" },
+		{ id: "x5", text: "option5" }
 	];
 
   let data = [
   {
     "name": "x1",
-    "value": 20
+    "value": 15
   },
   {
     "name": "x2",
-    "value": 35
+    "value": 25
   },
   {
     "name": "x3",
-    "value": 45
+    "value": 30
+  },
+  {
+    "name": "x4",
+    "value": 20
+  },
+  {
+    "name": "x5",
+    "value": 10
   },
 ]
 
+function calculateSlices(input) {
+  const index = data.findIndex(item => item.name === input);
+  const chosenValue = data.find(item => item.name === input)?.value;
+
+  const beforeValue = data.slice(0, index).reduce((sum, item) => sum + item.value, 0);
+  const afterValue = data.slice(index + 1).reduce((sum, item) => sum + item.value, 0);
+
+  return [beforeValue, chosenValue, afterValue].filter(Boolean);
+}
+
  let selected = $state()
+
+ let newSlices = $derived(calculateSlices(selected))
 
 </script>
 
 <h1>What time do you go to bed?</h1>
 <p>On average</p>
 
-<select name="cars" id="cars" bind:value={selected}>
+<select name="timeSelect" id="timeSelect" bind:value={selected}>
   {#each options as option}
     <option value={option.id}>{option.text}</option>
   {/each}
 </select>
 
 <div class="pie-container">
-<p class="annotation">{selected}</p>
+<p class="annotation">Selected: {selected}</p>
+{#each newSlices as slice}
+<p>{slice}%</p>
+{/each}
 <PieChart {data} {selected} {backgroundColor}/>
 </div>
 

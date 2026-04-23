@@ -3,10 +3,8 @@
     import {arc, pie} from "d3-shape"
 
     let {data, selected, backgroundColor} = $props()
-
-    $inspect(data.find((d) => d.name === selected))
 	
-	const width = 928;
+	const width = 500;
     const height = $derived(width);
 
   const pieLayout = pie()
@@ -40,7 +38,6 @@
   style:max-width="100%"
   style:height="auto"
 >
-
 	<g class="data">
 
 		{#each arcs as slice, i}
