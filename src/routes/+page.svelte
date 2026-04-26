@@ -2,6 +2,8 @@
 
   import PieChart from "./PieChart.svelte";
 
+  let {data} = $props()
+
   let backgroundColor = "midnightblue"
 
   let options = [
@@ -12,47 +14,25 @@
 		{ id: "x5", text: "option5" }
 	];
 
-  let data = [
-  {
-    "name": "x1",
-    "value": 15
-  },
-  {
-    "name": "x2",
-    "value": 25
-  },
-  {
-    "name": "x3",
-    "value": 30
-  },
-  {
-    "name": "x4",
-    "value": 20
-  },
-  {
-    "name": "x5",
-    "value": 10
-  },
-]
 
-function calculateSlices(input) {
-  const index = data.findIndex(item => item.name === input);
+function calculateSlices(input, data) {
+  const index = data.findIndex(item => item.Time === input);
   if (index === -1) return [];
 
-  const before = data.slice(0, index).reduce((sum, item) => sum + item.value, 0);
-  const chosen = data[index].value;
-  const after  = data.slice(index + 1).reduce((sum, item) => sum + item.value, 0);
+  const before = data.slice(0, index).reduce((sum, item) => sum + item.Adjusted, 0);
+  const chosen = data[index].Adjusted;
+  const after  = data.slice(index + 1).reduce((sum, item) => sum + item.Adjusted, 0);
 
   return [
     { name: "before", value: before },
-    { name: data[index].name, value: chosen },
+    { name: data[index].Time, value: chosen },
     { name: "after",  value: after  },
   ].filter(({ value }) => value);
 }
 
  let selected = $state()
 
- let newSlices = $derived(calculateSlices(selected))
+ let newSlices = $derived(calculateSlices(selected, data.sleep))
 
 </script>
 
@@ -60,8 +40,8 @@ function calculateSlices(input) {
 <p>On average</p>
 
 <select name="timeSelect" id="timeSelect" bind:value={selected}>
-  {#each options as option}
-    <option value={option.id}>{option.text}</option>
+  {#each data.sleep as option}
+    <option value={option.Time}>{option.Time}</option>
   {/each}
 </select>
 
