@@ -37,12 +37,17 @@
 
 function calculateSlices(input) {
   const index = data.findIndex(item => item.name === input);
-  const chosenValue = data.find(item => item.name === input)?.value;
+  if (index === -1) return [];
 
-  const beforeValue = data.slice(0, index).reduce((sum, item) => sum + item.value, 0);
-  const afterValue = data.slice(index + 1).reduce((sum, item) => sum + item.value, 0);
+  const before = data.slice(0, index).reduce((sum, item) => sum + item.value, 0);
+  const chosen = data[index].value;
+  const after  = data.slice(index + 1).reduce((sum, item) => sum + item.value, 0);
 
-  return [beforeValue, chosenValue, afterValue].filter(Boolean);
+  return [
+    { name: "before", value: before },
+    { name: data[index].name, value: chosen },
+    { name: "after",  value: after  },
+  ].filter(({ value }) => value);
 }
 
  let selected = $state()
@@ -63,9 +68,12 @@ function calculateSlices(input) {
 <div class="pie-container">
 <p class="annotation">Selected: {selected}</p>
 {#each newSlices as slice}
-<p>{slice}%</p>
+<p>{slice.name}:{slice.value}%</p>
 {/each}
-<PieChart {data} {selected} {backgroundColor}/>
+
+{#if newSlices}
+<PieChart data={newSlices} {selected} {backgroundColor}/>
+{/if}
 </div>
 
 <div>
