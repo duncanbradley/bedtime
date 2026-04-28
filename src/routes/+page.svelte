@@ -34,6 +34,17 @@ function calculateSlices(input, data) {
 
  let newSlices = $derived(calculateSlices(selected, data.sleep))
 
+ $inspect({newSlices})
+
+ function generateText(selected, newSlices){
+  const beforeText = newSlices[0].value
+  const chosenText = newSlices[1].value
+  const afterText = newSlices[2].value
+  return[beforeText, chosenText, afterText]
+ }
+
+ let textArray = $derived(generateText(selected, newSlices))
+
 </script>
 <h1>What time do you go to bed?</h1>
 <p>On average</p>
@@ -46,9 +57,6 @@ function calculateSlices(input, data) {
 
 <div class="pie-container">
 <p class="annotation">Selected: {selected}</p>
-{#each newSlices as slice}
-<p>{slice.name}:{slice.value}%</p>
-{/each}
 
 {#if newSlices}
 <PieChart data={newSlices} {selected} {backgroundColor}/>
