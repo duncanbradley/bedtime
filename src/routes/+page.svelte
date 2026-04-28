@@ -35,7 +35,7 @@ function calculateSlices(input, data) {
  let newSlices = $derived(calculateSlices(selected, data.sleep))
 
 </script>
-
+<div class="page-wrapper">
 <h1>What time do you go to bed?</h1>
 <p>On average</p>
 
@@ -59,8 +59,12 @@ function calculateSlices(input, data) {
 <div>
 <p class="source">British adults. Excludes 'Don't know'. Source: YouGov (2022)</p>
 </div>
+</div>
 
 <style>
+.page-wrapper{
+  background-image: url(/assets/grain.svg)
+}
   h1{
     color: aliceblue;
   }
@@ -71,7 +75,7 @@ function calculateSlices(input, data) {
     color: white
   }
   .pie-container{
-    position:relative
+    position:relative;
   }
 
   .annotation{
