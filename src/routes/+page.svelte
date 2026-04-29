@@ -37,10 +37,22 @@ function calculateSlices(input, data) {
  $inspect({newSlices})
 
  function generateText(selected, newSlices){
-  const beforeText = newSlices[0].value
-  const chosenText = newSlices[1].value
-  const afterText = newSlices[2].value
-  return[beforeText, chosenText, afterText]
+  if (newSlices[0].name !== 'before') {
+    // const chosenText = `About ${newSlices[0].value} go to bed at the same time as you`
+    // const afterText = `About ${newSlices[1].value} go to bed later than you`
+  }
+  else if {
+    // const beforeText = `About ${newSlices[0].value} go to bed earlier than you`
+    // const chosenText = `About ${newSlices[1].value} go to bed at the same time as you`
+  }
+  else{
+     // const beforeText = `About ${newSlices[0].value} go to bed earlier than you`
+  // const chosenText = `About ${newSlices[1].value} go to bed at the same time as you`
+  // const afterText = `About ${newSlices[2].value} go to bed later than you`
+  }
+
+
+  // return[beforeText, chosenText, afterText]
  }
 
  let textArray = $derived(generateText(selected, newSlices))
