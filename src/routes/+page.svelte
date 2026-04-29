@@ -34,14 +34,30 @@ function calculateSlices(input, data) {
 
  let newSlices = $derived(calculateSlices(selected, data.sleep))
 
- $inspect({newSlices})
+  // less than 5% of people
+  // <10 less than a tenth of people 
+  // 10 only about a tenth of people
+  // 15 about one in seven people
+  // 20 about a fifth of people
+  // 25 about a quarter of people
+  // 33 about a third of people
+  // 40 slightly less than half of people
+  // 50 about half of people
+  // 60 slightly more than half of people
+  // 67 about two thirds of people
+  // 75 about three quarters of people
+  // 80 about four fifths of people
+  // 85 
+  // 90 
+  // 95
+
 
  function generateText(selected, newSlices){
   if (newSlices[0].name !== 'before') {
     // const chosenText = `About ${newSlices[0].value} go to bed at the same time as you`
     // const afterText = `About ${newSlices[1].value} go to bed later than you`
   }
-  else if {
+  else if (newSlices[1].name !== 'after') {
     // const beforeText = `About ${newSlices[0].value} go to bed earlier than you`
     // const chosenText = `About ${newSlices[1].value} go to bed at the same time as you`
   }
