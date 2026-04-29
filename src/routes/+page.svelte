@@ -51,6 +51,22 @@ function calculateSlices(input, data) {
   // 90 
   // 95
 
+  function describeNumber(number) {
+    if (number < .1) {
+      return `only ${number*100}%`
+    } else if (number < 22.5) {
+      return `about a fifth`
+    } else if (number < 29) {
+      return `about a quarter`
+    } else if (number < 33) {
+      return `about a third`
+    } else if (number < 33) {
+      return `about a third`
+    } else {
+      return `${number*100}%`
+    }
+  }
+
 
  function generateText(selected, newSlices){
   if (newSlices[0].name !== 'before') {
