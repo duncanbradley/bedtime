@@ -32,7 +32,7 @@ function calculateSlices(input, data) {
   ].filter(({ value }) => value);
 }
 
- let selected = $state('8pm or earlier')
+ let selected = $state()
 
  let newSlices = $derived(calculateSlices(selected, data.sleep))
 
@@ -98,11 +98,13 @@ function calculateSlices(input, data) {
  }
 
 let textArray = $derived(generateText(newSlices))
-// let textArray = ["r", "o", "l"]
 
 </script>
-<h1>What time do you go to bed?</h1>
-<p>On average</p>
+
+<h1>
+  What time do you go to bed?
+    <span>On average</span>
+</h1>
 <!-- <GeneralTimePicker03></GeneralTimePicker03> -->
 
 <select name="timeSelect" id="timeSelect" bind:value={selected}>
@@ -111,21 +113,21 @@ let textArray = $derived(generateText(newSlices))
   {/each}
 </select>
 
+{#if selected}
 {#each textArray as text}
  <p>{text}</p>
 {/each}
 
 <div class="pie-container">
-<p class="annotation">Selected: {selected}</p>
-
-{#if newSlices}
 <PieChart data={newSlices} {selected} {backgroundColor}/>
-{/if}
 </div>
 
 <div>
-<p class="source">British adults. Excludes 'Don't know'. Source: YouGov (2022)</p>
+<span class="source">British adults. Excludes 'Don't know'. Source: YouGov (2022)</span>
 </div>
+
+{/if}
+
 
 
 <style>
@@ -141,8 +143,15 @@ font-family: 'Apfel Grotezk Fett'
     font-family: 'Apfel Grotezk Regular'
 
   }
+  span{
+    opacity: 0.8;
+    font-family: 'Apfel Grotezk Regular';
+    font-size: 1.2rem
+  }
   .source{
-    color: white
+    color: white;
+    font-size: 0.8em
+
   }
   .pie-container{
     position:relative;
