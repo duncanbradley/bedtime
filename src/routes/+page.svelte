@@ -7,7 +7,7 @@
 
   $inspect(data)
 
-  let backgroundColor = "midnightblue"
+  let backgroundColor = "#130f0f"
 
   let options = [
 		{ id: "x1", text: "option1" },
@@ -54,7 +54,8 @@ function calculateSlices(input, data) {
  let descriptions = $state({
   9: 'Only {value}% of people',
   10: 'About one in ten people',
-  15: 'About one in seven people',
+  11: 'Just over a tenth of people',
+  19: 'Just under a fifth of people',
   20: 'About a fifth of people',
   25: 'About a quarter of people',
   33: 'About a third of people',
@@ -66,7 +67,8 @@ function calculateSlices(input, data) {
   67: 'About two thirds of people',
   75: 'About three quarters of people',
   80: 'About four fifths of people',
-  85: 'About six in seven people',
+  81: 'Just over four fifths of people',
+  85: 'About six in seven people',  
   90: 'About nine in ten people',
   91: '{value}% of people',
  })
@@ -101,6 +103,9 @@ let textArray = $derived(generateText(newSlices))
 
 </script>
 
+<div class="page">
+<div class="content">
+
 <h1>
   What time do you go to bed?
     <span>On average</span>
@@ -112,26 +117,39 @@ let textArray = $derived(generateText(newSlices))
     <option value={option.Time}>{option.Time}</option>
   {/each}
 </select>
-
-{#if selected}
-{#each textArray as text}
- <p>{text}</p>
-{/each}
+ {#if selected}
 
 <div class="pie-container">
 <PieChart data={newSlices} {selected} {backgroundColor}/>
+<div  class="annotation top-left">
+<span>{textArray[2]}</span>
+</div>
+<div  class="annotation bottom-centre">
+<span>{textArray[1]}</span>
+</div>
+<div  class="annotation top-right">
+<span>{textArray[0]}</span>
 </div>
 
+</div>
 <div>
 <span class="source">British adults. Excludes 'Don't know'. Source: YouGov (2022)</span>
 </div>
 
 {/if}
-
-
+</div>
+</div>
 
 <style>
- 
+
+.page{
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.content{
+}
 
   h1 {
 color: aliceblue;
@@ -144,22 +162,53 @@ font-family: 'Apfel Grotezk Fett'
 
   }
   span{
+    color: aliceblue;
+    font-family: 'Apfel Grotezk Regular'
+
+  }
+  span{
     opacity: 0.8;
     font-family: 'Apfel Grotezk Regular';
     font-size: 1.2rem
   }
   .source{
     color: white;
-    font-size: 0.8em
+    font-size: 0.8em;
+         text-align: right
+  }
+  .pie-container {
+    position: relative;
+    padding: 5em;
+    border: 1px solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1em;
+}
 
-  }
-  .pie-container{
-    position:relative;
-  }
+  .annotation {
+    position: absolute;
+    max-width: 10em;
+}
 
-  .annotation{
-    position:absolute
-  }
+.annotation.top-right {
+    top: 1em;
+    right: 1em;
+     text-align: right
+}
+
+.annotation.top-left {
+    top: 1em;
+    left: 1em;
+     text-align: left
+}
+
+.annotation.bottom-centre {
+    bottom: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+     text-align: center
+}
 
   @font-face {
     font-family: 'Apfel Grotezk Fett';
