@@ -4,7 +4,7 @@
 
     let {data, selected, backgroundColor} = $props()
 	
-	const width = 500;
+	const width = 200;
     const height = $derived(width);
 
   const pieLayout = pie()
@@ -16,11 +16,15 @@
 		.innerRadius(0)
 		.outerRadius(Math.min(width, height) / 2 - 1))
 
-  const labelRadius = $derived(arcPath.outerRadius()() * 0.8)
+  const labelRadius = $derived(arcPath.outerRadius()() * 1)
 
   const arcLabel = $derived(arc()
 		.innerRadius(labelRadius)
-		.outerRadius(labelRadius))
+		.outerRadius(labelRadius)
+	.cornerRadius(15)
+.padAngle(50))
+
+		$inspect({arcLabel})
 
   const arcs = $derived(pieLayout(data))
 
@@ -30,6 +34,14 @@
     else return '#e2b540'
   }
 
+
+function getPointOnArc(slice, radius) {
+  const midAngle = (slice.startAngle + slice.endAngle) / 2;
+  return [
+    Math.cos(midAngle) * radius,
+    Math.sin(midAngle) * radius
+  ];
+}
 </script>
 
 <svg
@@ -47,18 +59,33 @@
 				d={arcPath(slice)}
 				fill={assignColor(i, slice.data)}
 				stroke={backgroundColor}
-                stroke-width={6}
+                // stroke-width={width/50}
 				/>
 
-			<!-- <text
+	 {@const centroid = arcLabel.centroid(slice)}
+    <path
+      d={centroid[0] < 0
+          ? centroid[1] < 0
+            ? "M0,0 L-5,0 L-5,-10 L5,-10 L5,-15"  // Top-left
+            : "M0,0 L-5,0 L-5,10 L5,10 L5,15"     // Bottom-left
+          : centroid[1] < 0
+            ? "M0,0 L5,0 5,-10 L-5,-10 L-5,-15"   // Top-right
+            : "M0,0 L5,0 5,10 L-5,10 L-5,15"}     // Bottom-right
+      transform="translate({centroid})"
+      stroke="aliceblue"
+      stroke-width="1"
+      fill="none"
+    />
+
+			 <!-- <text
 				style="font-weight: bold"
 				transform="translate({arcLabel.centroid(slice)})"
 				text-anchor="middle"
 				>
-				{slice.data.name}
-			</text>
+				x
+			</text>  -->
 			
-			{#if (slice.endAngle - slice.startAngle) > 0.25}
+			<!-- {#if (slice.endAngle - slice.startAngle) > 0.25}
 				<text
 					text-anchor="middle"
 					transform="translate({[arcLabel.centroid(slice)[0], arcLabel.centroid(slice)[1] + 10]})"
@@ -74,5 +101,6 @@
 <style>
 	svg {
 		font-size: 3em;
+		overflow: visible;
 	}
 </style>

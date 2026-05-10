@@ -111,7 +111,7 @@ let textArray = $derived(generateText(newSlices))
     <span>On average</span>
 </h1>
 
-{#if !selected}
+{#if true}
 <form>
   <div role="radiogroup" aria-labelledby="question">
 
@@ -225,20 +225,19 @@ font-family: 'Apfel Grotezk Fett'
     bottom: 1em;
     left: 50%;
     transform: translateX(-50%);
-     text-align: center
+     text-align: center;
+         max-width: 12em;
+
 }
 
  .sleep-options {
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
     gap: 0.5rem;
     margin-top: 1rem;
-    flex-wrap: wrap;
   }
 
   .sleep-option {
-
-
     padding: 0.75rem 1.5rem;
     border: 2px solid aliceblue;
     border-radius: 0.5rem;
