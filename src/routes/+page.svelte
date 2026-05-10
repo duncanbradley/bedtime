@@ -7,7 +7,7 @@
 
   $inspect(data)
 
-  let backgroundColor = "#130f0f"
+  let backgroundColor = "#2d2727"
 
   let options = [
 		{ id: "x1", text: "option1" },
@@ -106,17 +106,35 @@ let textArray = $derived(generateText(newSlices))
 <div class="page">
 <div class="content">
 
-<h1>
+<h1 id="question">
   What time do you go to bed?
     <span>On average</span>
 </h1>
+
+{#if !selected}
+<form>
+  <div role="radiogroup" aria-labelledby="question">
+
+    <div class="sleep-options">
+      {#each data.sleep as option (option.Time)}
+        <label class="sleep-option">
+          <input
+            type="radio"
+            name="bedtime"
+            value={option.Time}
+            bind:group={selected}
+          />
+          {option.Time}
+        </label>
+      {/each}
+    </div>
+  </div>
+</form>
+
+{/if}
 <!-- <GeneralTimePicker03></GeneralTimePicker03> -->
 
-<select name="timeSelect" id="timeSelect" bind:value={selected}>
-  {#each data.sleep as option}
-    <option value={option.Time}>{option.Time}</option>
-  {/each}
-</select>
+
  {#if selected}
 
 <div class="pie-container">
@@ -209,6 +227,37 @@ font-family: 'Apfel Grotezk Fett'
     transform: translateX(-50%);
      text-align: center
 }
+
+ .sleep-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .sleep-option {
+
+
+    padding: 0.75rem 1.5rem;
+    border: 2px solid aliceblue;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    color: aliceblue;
+    font-family: 'Apfel Grotezk Regular';
+    font-size: 1em
+  }
+
+  .sleep-option:hover {
+    background: #f7fafc;
+        color:#2d2727;
+
+  }
+
+  input{
+    display:none
+  }
+
 
   @font-face {
     font-family: 'Apfel Grotezk Fett';
