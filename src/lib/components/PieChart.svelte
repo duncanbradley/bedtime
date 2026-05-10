@@ -25,28 +25,10 @@
   const arcs = $derived(pieLayout(data))
 
   function assignColor(i, sliceData) {
-    if (i === 0 && sliceData.name !== selected) return 'grey'
-    else if (sliceData.name === selected) return 'green'
-    else return 'red'
+    if (i === 0 && sliceData.name !== selected) return '#116bab'
+    else if (sliceData.name === selected) return '#16913a'
+    else return '#e2b540'
   }
-
-  // less than 5% of people
-  // <10 less than a tenth of people 
-  // 10 only about a tenth of people
-  // 15 about one in seven people
-  // 20 about a fifth of people
-  // 25 about a quarter of people
-  // 33 about a third of people
-  // 40 slightly less than half of people
-  // 50 about half of people
-  // 60 slightly more than half of people
-  // 67 about two thirds of people
-  // 75 about three quarters of people
-  // 80 about four fifths of people
-  // 85 
-  // 90 
-  // 95
-
 
 </script>
 
@@ -68,7 +50,7 @@
                 stroke-width={6}
 				/>
 
-			<text
+			<!-- <text
 				style="font-weight: bold"
 				transform="translate({arcLabel.centroid(slice)})"
 				text-anchor="middle"
@@ -83,7 +65,7 @@
 					>
 					{slice.data.value.toLocaleString("en-US")}
 				</text>
-			{/if}
+			{/if} -->
 		{/each}
 	</g>
 </svg>
