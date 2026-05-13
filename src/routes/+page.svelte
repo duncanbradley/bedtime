@@ -111,7 +111,7 @@ let textArray = $derived(generateText(newSlices))
     <span>On average</span>
 </h1>
 
-{#if true}
+{#if !selected}
 <form>
   <div role="radiogroup" aria-labelledby="question">
 
@@ -136,6 +136,11 @@ let textArray = $derived(generateText(newSlices))
 
 
  {#if selected}
+
+ <!-- up to 10pm, use L+R for first two labels -->
+ <!-- between, use center for main label -->
+<!-- from around midnight, use R+L for first two label -->
+
 
 <div class="pie-container">
 <PieChart data={newSlices} {selected} {backgroundColor}/>
