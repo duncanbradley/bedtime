@@ -3,6 +3,40 @@
     import {arc, pie} from "d3-shape"
 
     let {data, selected, backgroundColor} = $props()
+
+	function getConnectorPath(arcs, sliceIndex) {
+	// Calculate which slices are in the top half
+	const topSlices = arcs
+		.map((arc, idx) => ({
+			idx,
+			centroid: arcLabel.centroid(arc),
+			angle: Math.atan2(arcLabel.centroid(arc)[1], arcLabel.centroid(arc)[0])
+		}))
+		.filter(s => s.centroid[1] < 0);
+
+	// If two slices in top half, distribute left/right; one in bottom
+	if (topSlices.length === 2) {
+		const leftmost = topSlices.reduce((a, b) => a.centroid[0] < b.centroid[0] ? a : b);
+		const isLeftSlice = sliceIndex === leftmost.idx;
+		
+		if (isLeftSlice) {
+			return "M0,0 L-5,0 L-5,-10 L-10,-10 L-10,-15"; // up and to the left
+		} else if (topSlices.some(s => s.idx === sliceIndex)) {
+			return "M0,0 L5,0 L5,-10 L10,-10 L10,-15"; // up and to the right
+		} else {
+			return "M0,0 L0,5 L0,15"; // straight down
+		}
+	} else {
+		// Evenly distributed: first up-right, second down, third up-left
+		const paths = [
+			"M0,0 L5,0 L5,-10 L10,-10 L10,-15",  // up and to the right
+			"M0,0 L0,5 L0,15",                     // straight down
+			"M0,0 L-5,0 L-5,-10 L-10,-10 L-10,-15" // up and to the left
+		];
+		return paths[sliceIndex];
+	}
+}
+
 	
 	const width = 200;
     const height = $derived(width);
@@ -56,26 +90,20 @@ function getPointOnArc(slice, radius) {
 		{#each arcs as slice, i}
 			
 			<path 
-				d={arcPath(slice)}
-				fill={assignColor(i, slice.data)}
-				stroke={backgroundColor}
-                // stroke-width={width/50}
-				/>
+		d={arcPath(slice)}
+		fill={assignColor(i, slice.data)}
+		stroke={backgroundColor}
+	/>
 
-	 {@const centroid = arcLabel.centroid(slice)}
-    <path
-      d={centroid[0] < 0
-          ? centroid[1] < 0
-            ? "M0,0 L-5,0 L-5,-10 L5,-10 L5,-15"  // Top-left
-            : "M0,0 L-5,0 L-5,10 L5,10 L5,15"     // Bottom-left
-          : centroid[1] < 0
-            ? "M0,0 L5,0 5,-10 L-5,-10 L-5,-15"   // Top-right
-            : "M0,0 L5,0 5,10 L-5,10 L-5,15"}     // Bottom-right
-      transform="translate({centroid})"
-      stroke="aliceblue"
-      stroke-width="1"
-      fill="none"
-    />
+	{@const centroid = arcLabel.centroid(slice)}
+	{@const pathD = getConnectorPath(arcs, i)}
+	<path
+		d={pathD}
+		transform="translate({centroid})"
+		stroke="aliceblue"
+		stroke-width="1"
+		fill="none"
+	/>
 
 			 <!-- <text
 				style="font-weight: bold"
