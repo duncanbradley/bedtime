@@ -2,9 +2,15 @@
 
     import {arc, pie} from "d3-shape"
 
-    let {data, selected, backgroundColor} = $props()
+    let {data, selected, backgroundColor, containerHeight=$bindable(0), containerWidth=$bindable(0)} = $props()
 
-	function getConnectorPath(arcs, sliceIndex) {
+
+
+	function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
+	const svgWidth = 200;
+	const svgHeight = 200;
+	const containerPadding = 5 * 16; // 5em in pixels (assuming 16px = 1em)
+	
 	// Calculate which slices are in the top half
 	const topSlices = arcs
 		.map((arc, idx) => ({
@@ -14,29 +20,71 @@
 		}))
 		.filter(s => s.centroid[1] < 0);
 
+	// Helper function to get endpoint at container edge
+	const getEndpoint = (isLeft) => {
+		const centroid = arcLabel.centroid(arcs[sliceIndex]);
+		const angleFromTop = Math.abs(Math.atan2(centroid[0], -centroid[1]) * (180 / Math.PI));
+		
+		// Direction vector
+		const dirX = isLeft ? -1 : 1;
+		const dirY = angleFromTop < 45 ? -1 : -1; // Always going up for top slices
+		
+		// Calculate which edge we'll hit
+		const svgEdgeX = isLeft ? -svgWidth / 2 : svgWidth / 2;
+		const svgEdgeY = -svgHeight / 2;
+		
+		// Convert SVG coordinates to container coordinates
+		const containerCenterX = containerWidth / 2;
+		const containerCenterY = containerHeight / 2;
+		const endX = containerCenterX + svgEdgeX;
+		const endY = containerCenterY + svgEdgeY;
+		
+		return { x: endX, y: endY };
+	};
+
+	// Helper function to build path with endpoint
+	const getAngledPath = (isLeft) => {
+		const centroid = arcLabel.centroid(arcs[sliceIndex]);
+		const angleFromTop = Math.abs(Math.atan2(centroid[0], -centroid[1]) * (180 / Math.PI));
+		const endpoint = getEndpoint(isLeft);
+		
+		// Convert endpoint back to SVG coordinates relative to centroid
+		const containerCenterX = containerWidth / 2;
+		const containerCenterY = containerHeight / 2;
+		const relEndX = endpoint.x - containerCenterX - centroid[0];
+		const relEndY = endpoint.y - containerCenterY - centroid[1];
+		
+		if (angleFromTop < 45) {
+			// Go up first, then out
+			return `M0,0 L0,${relEndY * 0.5} L${relEndX},${relEndY}`;
+		} else {
+			// Go out first, then up
+			return `M0,0 L${relEndX * 0.5},0 L${relEndX},${relEndY}`;
+		}
+	};
+
 	// If two slices in top half, distribute left/right; one in bottom
 	if (topSlices.length === 2) {
 		const leftmost = topSlices.reduce((a, b) => a.centroid[0] < b.centroid[0] ? a : b);
 		const isLeftSlice = sliceIndex === leftmost.idx;
 		
 		if (isLeftSlice) {
-			return "M0,0 L-5,0 L-5,-10 L-10,-10 L-10,-15"; // up and to the left
+			return getAngledPath(true);
 		} else if (topSlices.some(s => s.idx === sliceIndex)) {
-			return "M0,0 L5,0 L5,-10 L10,-10 L10,-15"; // up and to the right
+			return getAngledPath(false);
 		} else {
-			return "M0,0 L0,5 L0,15"; // straight down
+			return "M0,0 L0,15"; // straight down to bottom
 		}
 	} else {
-		// Evenly distributed: first up-right, second down, third up-left
+		// Evenly distributed
 		const paths = [
-			"M0,0 L5,0 L5,-10 L10,-10 L10,-15",  // up and to the right
-			"M0,0 L0,5 L0,15",                     // straight down
-			"M0,0 L-5,0 L-5,-10 L-10,-10 L-10,-15" // up and to the left
+			getAngledPath(false),  // up and to the right
+			"M0,0 L0,15",          // straight down
+			getAngledPath(true)    // up and to the left
 		];
 		return paths[sliceIndex];
 	}
 }
-
 	
 	const width = 200;
     const height = $derived(width);
@@ -78,6 +126,8 @@ function getPointOnArc(slice, radius) {
 }
 </script>
 
+<div class="svg-wrapper" bind:clientWidth={containerWidth} bind:clientHeight={containerHeight}>
+
 <svg
   {width}
   {height}
@@ -95,15 +145,17 @@ function getPointOnArc(slice, radius) {
 		stroke={backgroundColor}
 	/>
 
-	{@const centroid = arcLabel.centroid(slice)}
-	{@const pathD = getConnectorPath(arcs, i)}
-	<path
-		d={pathD}
-		transform="translate({centroid})"
-		stroke="aliceblue"
-		stroke-width="1"
-		fill="none"
-	/>
+	{#if containerWidth && containerHeight}
+		{@const centroid = arcLabel.centroid(slice)}
+		{@const pathD = getConnectorPath(arcs, i, containerWidth, containerHeight)}
+		<path
+			d={pathD}
+			transform="translate({centroid})"
+			stroke="aliceblue"
+			stroke-width="1"
+			fill="none"
+		/>
+	{/if}
 
 			 <!-- <text
 				style="font-weight: bold"
@@ -124,11 +176,16 @@ function getPointOnArc(slice, radius) {
 		{/each}
 	</g>
 </svg>
-
+</div>
 
 <style>
 	svg {
 		font-size: 3em;
 		overflow: visible;
 	}
+	.svg-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
