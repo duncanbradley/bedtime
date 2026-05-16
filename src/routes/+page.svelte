@@ -143,7 +143,7 @@ let textArray = $derived(generateText(newSlices))
 <!-- from around midnight, use R+L for first two label -->
 
 
-<div class="pie-container" bind:clientWidth={containerWidth} bind:clientHeight={containerHeight}>
+<div class="pie-container">
 <PieChart data={newSlices} {selected} {backgroundColor}/>
 <div  class="annotation top-left">
 <span>{textArray[2]}</span>
