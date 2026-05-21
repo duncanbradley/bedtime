@@ -4,9 +4,11 @@
 
     let {data, selected, backgroundColor, containerHeight=$bindable(0), containerWidth=$bindable(0)} = $props()
 
-
+$inspect({containerHeight, containerWidth})
 function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
 	const centroid = arcLabel.centroid(arcs[sliceIndex]);
+	  $inspect({centroid, containerWidth})
+
 	
 	// Count how many slices have centroids in the top half (y < 0)
 	const topSliceCount = arcs.filter(arc => arcLabel.centroid(arc)[1] < 0).length;
@@ -26,9 +28,9 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
 	
 	// Build the path
 	if (pathType === 'vertical-first') {
-		return `M0,0 L0,-7.5 L${centroid[0]},-7.5`;
+		return `M0,0 L0,${centroid[1]} L${centroid[0]},${centroid[1]}`;
 	} else {
-		return `M0,0 L${centroid[0] * 0.5},0 L${centroid[0] * 0.5},200`;
+		return `M0,0 L${centroid[0]},0 L${centroid[0]},${centroid[1]}`;
 	}
 }
 	
@@ -38,7 +40,6 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
   const pieLayout = pie()
 		.sort(null)
 		.value(d => d.value);
-
 
   const arcPath = $derived(arc()
 		.innerRadius(0)
@@ -52,8 +53,6 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
 	.cornerRadius(15)
 .padAngle(50))
 
-		$inspect({arcLabel})
-
   const arcs = $derived(pieLayout(data))
 
   function assignColor(i, sliceData) {
@@ -62,14 +61,6 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
     else return '#e2b540'
   }
 
-
-function getPointOnArc(slice, radius) {
-  const midAngle = (slice.startAngle + slice.endAngle) / 2;
-  return [
-    Math.cos(midAngle) * radius,
-    Math.sin(midAngle) * radius
-  ];
-}
 </script>
 
 <div class="svg-wrapper" bind:clientWidth={containerWidth} bind:clientHeight={containerHeight}>

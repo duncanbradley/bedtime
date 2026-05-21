@@ -146,13 +146,13 @@ let textArray = $derived(generateText(newSlices))
 <div class="pie-container">
 <PieChart data={newSlices} {selected} {backgroundColor}/>
 <div  class="annotation top-left">
-<span>{textArray[2]}</span>
+<span class="annotation-text">{textArray[2]}</span>
 </div>
 <div  class="annotation bottom-centre">
-<span>{textArray[1]}</span>
+<span class="annotation-text">{textArray[1]}</span>
 </div>
 <div  class="annotation top-right">
-<span>{textArray[0]}</span>
+<span class="annotation-text">{textArray[0]}</span>
 </div>
 
 </div>
@@ -171,8 +171,6 @@ let textArray = $derived(generateText(newSlices))
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.content{
 }
 
   h1 {
@@ -202,7 +200,7 @@ font-family: 'Apfel Grotezk Fett'
   }
   .pie-container {
     position: relative;
-    padding: 5em;
+    padding: 5em 5em 6.5em 5em;
     border: 1px solid;
     display: flex;
     justify-content: center;
@@ -213,6 +211,12 @@ font-family: 'Apfel Grotezk Fett'
   .annotation {
     position: absolute;
     max-width: 10em;
+
+}
+
+.annotation-text{
+      font-size: 1.1em;
+
 }
 
 .annotation.top-right {
@@ -232,7 +236,7 @@ font-family: 'Apfel Grotezk Fett'
     left: 50%;
     transform: translateX(-50%);
      text-align: center;
-         max-width: 12em;
+         max-width: 12.5em;
 
 }
 
