@@ -4,19 +4,29 @@
 
     let {data, selected, backgroundColor, containerHeight=$bindable(0), containerWidth=$bindable(0)} = $props()
 
-$inspect({containerHeight, containerWidth})
+	const width = 200;
+    const height = $derived(width);
+
 function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
 	const centroid = arcLabel.centroid(arcs[sliceIndex]);
 	  $inspect({centroid, containerWidth})
+
+	  const positionX = centroid[0]
+	  const positionY = centroid[1]
+	  console.log('containerWidth', containerWidth)
+	  console.log('containerHeight', containerHeight)
+	  console.log('positionX', positionX)
+	  console.log('positionY', positionY)
 
 	
 	// Count how many slices have centroids in the top half (y < 0)
 	const topSliceCount = arcs.filter(arc => arcLabel.centroid(arc)[1] < 0).length;
 	const isInTopHalf = centroid[1] < 0;
+	const isOnRight = centroid[0] > 0
 	
 	// If 2 slices in top half and this slice is in bottom, go straight down
 	if (topSliceCount === 2 && !isInTopHalf) {
-		return "M0,0 L0,15";
+		return `M0,0 L0,${height-(positionY)-55}`;
 	}
 	
 	// Calculate the angle from the top (0° = straight up)
@@ -34,8 +44,7 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
 	}
 }
 	
-	const width = 200;
-    const height = $derived(width);
+	
 
   const pieLayout = pie()
 		.sort(null)

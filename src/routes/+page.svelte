@@ -210,12 +210,12 @@ font-family: 'Apfel Grotezk Fett'
 
   .annotation {
     position: absolute;
-    max-width: 10em;
+    max-width: 6em;
 
 }
 
 .annotation-text{
-      font-size: 1.1em;
+      font-size: 0.8em;
 
 }
 
@@ -236,7 +236,7 @@ font-family: 'Apfel Grotezk Fett'
     left: 50%;
     transform: translateX(-50%);
      text-align: center;
-         max-width: 12.5em;
+         max-width: 14em;
 
 }
 
