@@ -8,37 +8,61 @@
     const height = $derived(width);
 	
 function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
-    const centroid = arcLabel.centroid(arcs[sliceIndex]);
-
-    const positionX = centroid[0];
-    const positionY = centroid[1];
-
-    const topSliceCount = arcs.filter(arc => arcLabel.centroid(arc)[1] < 0).length;
-    const isInTopHalf = positionY < 0;
-    const isOnRight = positionX > 0;
-
-    // Bottom slice goes straight down
-    if (topSliceCount === 2 && !isInTopHalf) {
-        return `M0,0 L0,${height - positionY - 55}`;
-    }
-
+    const arc = arcs[sliceIndex];
+    const [positionX, positionY] = arcLabel.centroid(arc);
+    
+    // Configuration constants
+    const BOTTOM_OFFSET = 55;
+    const SIDE_MARGIN = 40;
+    const VERTICAL_OFFSET = 45;
+    const ANGLED_VERTICAL_OFFSET = 20;
+    const ANGLE_THRESHOLD = 45;
+    
+    // Calculate derived values
     const angleFromTop = Math.abs(Math.atan2(positionX, -positionY) * (180 / Math.PI));
-    const isSteeplyAngled = angleFromTop >= 45;
-    const pathType = isSteeplyAngled ? 'angled-first' : 'vertical-first';
-
-    // Horizontal offset: extend right for right slices, left for left slices
-    const hOffset = isOnRight
-        ? width - positionX - 40
-        : -(width - Math.abs(centroid[0]) - 40);   // ← mirror for left side
-
-    if (pathType === 'vertical-first') {
-        const vEnd = -height - positionY + 45;
+    const isSteeplyAngled = angleFromTop >= ANGLE_THRESHOLD;
+    
+    // Find the slice closest to bottom
+    const bottomMostSlice = arcs.reduce((closest, current) => {
+        const currentY = arcLabel.centroid(current)[1];
+        const closestY = arcLabel.centroid(closest)[1];
+        return currentY > closestY ? current : closest;
+    });
+    
+    const isBottomMostSlice = arc === bottomMostSlice;
+    
+    // Special case: bottom-most slice goes straight down
+    if (isBottomMostSlice) {
+        const verticalDistance = containerHeight - positionY - BOTTOM_OFFSET;
+        return `M0,0 L0,${verticalDistance}`;
+    }
+    
+    // Find the rightmost slice among the top two (excluding bottom-most)
+    const topSlices = arcs.filter(a => a !== bottomMostSlice);
+    const rightMostSlice = topSlices.reduce((rightmost, current) => {
+        const currentX = arcLabel.centroid(current)[0];
+        const rightmostX = arcLabel.centroid(rightmost)[0];
+        return currentX > rightmostX ? current : rightmost;
+    });
+    
+    const isRightMostSlice = arc === rightMostSlice;
+    
+    // Calculate horizontal offset: rightmost goes right, leftmost goes left
+    const hOffset = isRightMostSlice
+        ? containerWidth - positionX - SIDE_MARGIN
+        : -(containerWidth - Math.abs(positionX) - SIDE_MARGIN);
+    
+    // Route based on angle
+    if (!isSteeplyAngled) {
+        // Vertical-first path: go down, then horizontal
+        const vEnd = -containerHeight - positionY + VERTICAL_OFFSET;
         return `M0,0 L0,${vEnd} L${hOffset},${vEnd}`;
     } else {
-        return `M0,0 L${hOffset},0 L${hOffset},${-height / 2 - positionY + 20}`;
+        // Angled-first path: go horizontal, then down
+        const vEnd = -containerHeight / 2 - positionY + ANGLED_VERTICAL_OFFSET;
+        return `M0,0 L${hOffset},0 L${hOffset},${vEnd}`;
     }
 }
-	
 
   const pieLayout = pie()
 		.sort(null)
@@ -93,7 +117,7 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
 			transform="translate({centroid})"
 			stroke="aliceblue"
 			stroke-width="1"
-			fill="none"
+			fill="RED"
 		/>
 	{/if}
 
