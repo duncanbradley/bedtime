@@ -6,44 +6,38 @@
 
 	const width = 200;
     const height = $derived(width);
-
+	
 function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
-	const centroid = arcLabel.centroid(arcs[sliceIndex]);
-	  $inspect({centroid, containerWidth})
+    const centroid = arcLabel.centroid(arcs[sliceIndex]);
 
-	  const positionX = centroid[0]
-	  const positionY = centroid[1]
-	  console.log('containerWidth', containerWidth)
-	  console.log('containerHeight', containerHeight)
-	  console.log('positionX', positionX)
-	  console.log('positionY', positionY)
+    const positionX = centroid[0];
+    const positionY = centroid[1];
 
-	
-	// Count how many slices have centroids in the top half (y < 0)
-	const topSliceCount = arcs.filter(arc => arcLabel.centroid(arc)[1] < 0).length;
-	const isInTopHalf = centroid[1] < 0;
-	const isOnRight = centroid[0] > 0
-	
-	// If 2 slices in top half and this slice is in bottom, go straight down
-	if (topSliceCount === 2 && !isInTopHalf) {
-		return `M0,0 L0,${height-(positionY)-55}`;
-	}
-	
-	// Calculate the angle from the top (0° = straight up)
-	const angleFromTop = Math.abs(Math.atan2(centroid[0], -centroid[1]) * (180 / Math.PI));
-	
-	// Choose path style based on angle
-	const isSteeplyAngled = angleFromTop >= 45;
-	const pathType = isSteeplyAngled ? 'angled-first' : 'vertical-first';
-	
-	// Build the path
-	if (pathType === 'vertical-first') {
-		return `M0,0 L0,${-height-centroid[1]+45} L${width/2-centroid[0]-30},${-height-centroid[1]+45}`;
-	} else {
-		return `M0,0 L${width-centroid[0]-40},0 L${width-centroid[0]-40},${-height/2-centroid[1]+20}`;
-	}
+    const topSliceCount = arcs.filter(arc => arcLabel.centroid(arc)[1] < 0).length;
+    const isInTopHalf = positionY < 0;
+    const isOnRight = positionX > 0;
+
+    // Bottom slice goes straight down
+    if (topSliceCount === 2 && !isInTopHalf) {
+        return `M0,0 L0,${height - positionY - 55}`;
+    }
+
+    const angleFromTop = Math.abs(Math.atan2(positionX, -positionY) * (180 / Math.PI));
+    const isSteeplyAngled = angleFromTop >= 45;
+    const pathType = isSteeplyAngled ? 'angled-first' : 'vertical-first';
+
+    // Horizontal offset: extend right for right slices, left for left slices
+    const hOffset = isOnRight
+        ? width - positionX - 40
+        : -(width - Math.abs(centroid[0]) - 40);   // ← mirror for left side
+
+    if (pathType === 'vertical-first') {
+        const vEnd = -height - positionY + 45;
+        return `M0,0 L0,${vEnd} L${hOffset},${vEnd}`;
+    } else {
+        return `M0,0 L${hOffset},0 L${hOffset},${-height / 2 - positionY + 20}`;
+    }
 }
-	
 	
 
   const pieLayout = pie()
