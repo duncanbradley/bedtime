@@ -38,9 +38,9 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
 	
 	// Build the path
 	if (pathType === 'vertical-first') {
-		return `M0,0 L0,${centroid[1]} L${centroid[0]},${centroid[1]}`;
+		return `M0,0 L0,${-height-centroid[1]+45} L${width/2-centroid[0]-30},${-height-centroid[1]+45}`;
 	} else {
-		return `M0,0 L${centroid[0]},0 L${centroid[0]},${centroid[1]}`;
+		return `M0,0 L${width-centroid[0]-40},0 L${width-centroid[0]-40},${-height/2-centroid[1]+20}`;
 	}
 }
 	
