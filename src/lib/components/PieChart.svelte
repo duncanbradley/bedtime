@@ -7,7 +7,28 @@
 	const width = 200;
     const height = $derived(width);
 	
-function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
+function getSlicePositions(arcs) {
+    const bottomMostSlice = arcs.reduce((closest, current) => {
+        const currentY = arcLabel.centroid(current)[1];
+        const closestY = arcLabel.centroid(closest)[1];
+        return currentY > closestY ? current : closest;
+    });
+    
+    const topSlices = arcs.filter(a => a !== bottomMostSlice);
+    const rightMostSlice = topSlices.reduce((rightmost, current) => {
+        const currentX = arcLabel.centroid(current)[0];
+        const rightmostX = arcLabel.centroid(rightmost)[0];
+        return currentX > rightmostX ? current : rightmost;
+    });
+    
+    const bottomIndex = arcs.indexOf(bottomMostSlice);
+    const topRightIndex = arcs.indexOf(rightMostSlice);
+    const topLeftIndex = arcs.findIndex(a => a !== bottomMostSlice && a !== rightMostSlice);
+    
+    return { topRightIndex, topLeftIndex, bottomIndex };
+}
+
+function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight, positions) {
     const arc = arcs[sliceIndex];
     const [positionX, positionY] = arcLabel.centroid(arc);
     
@@ -22,33 +43,18 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
     const angleFromTop = Math.abs(Math.atan2(positionX, -positionY) * (180 / Math.PI));
     const isSteeplyAngled = angleFromTop >= ANGLE_THRESHOLD;
     
-    // Find the slice closest to bottom
-    const bottomMostSlice = arcs.reduce((closest, current) => {
-        const currentY = arcLabel.centroid(current)[1];
-        const closestY = arcLabel.centroid(closest)[1];
-        return currentY > closestY ? current : closest;
-    });
+    const isBottomSlice = sliceIndex === positions.bottomIndex;
     
-    const isBottomMostSlice = arc === bottomMostSlice;
-    
-    // Special case: bottom-most slice goes straight down
-    if (isBottomMostSlice) {
+    // Special case: bottom slice goes straight down
+    if (isBottomSlice) {
         const verticalDistance = containerHeight - positionY - BOTTOM_OFFSET;
         return `M0,0 L0,${verticalDistance}`;
     }
     
-    // Find the rightmost slice among the top two (excluding bottom-most)
-    const topSlices = arcs.filter(a => a !== bottomMostSlice);
-    const rightMostSlice = topSlices.reduce((rightmost, current) => {
-        const currentX = arcLabel.centroid(current)[0];
-        const rightmostX = arcLabel.centroid(rightmost)[0];
-        return currentX > rightmostX ? current : rightmost;
-    });
+    const isRightSlice = sliceIndex === positions.topRightIndex;
     
-    const isRightMostSlice = arc === rightMostSlice;
-    
-    // Calculate horizontal offset: rightmost goes right, leftmost goes left
-    const hOffset = isRightMostSlice
+    // Calculate horizontal offset: right goes right, left goes left
+    const hOffset = isRightSlice
         ? containerWidth - positionX - SIDE_MARGIN
         : -(containerWidth - Math.abs(positionX) - SIDE_MARGIN);
     
@@ -63,6 +69,7 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
         return `M0,0 L${hOffset},0 L${hOffset},${vEnd}`;
     }
 }
+
 
   const pieLayout = pie()
 		.sort(null)
@@ -88,6 +95,11 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
     else return '#e2b540'
   }
 
+  const positions = $derived(getSlicePositions(arcs));
+
+  $inspect({positions})
+
+
 </script>
 
 <div class="svg-wrapper" bind:clientWidth={containerWidth} bind:clientHeight={containerHeight}>
@@ -111,7 +123,7 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight) {
 
 	{#if containerWidth && containerHeight}
 		{@const centroid = arcLabel.centroid(slice)}
-		{@const pathD = getConnectorPath(arcs, i, containerWidth, containerHeight)}
+		{@const pathD = getConnectorPath(arcs, i, width, height, positions)}
 		<path
 			d={pathD}
 			transform="translate({centroid})"
