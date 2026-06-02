@@ -55,25 +55,24 @@ function calculateSlices(input, data) {
 }
 
  let descriptions = $state({
-  9: 'Only {value}% of people',
-  10: 'About one in ten people',
-  11: 'Just over a tenth of people',
-  19: 'Just under a fifth of people',
-  20: 'About a fifth of people',
-  25: 'About a quarter of people',
-  33: 'About a third of people',
-  40: 'Just over a third of people',
-  45: 'Just less than half of people',
-  50: 'About half of people',
-  55: 'Just over half of people',
-  60: 'Just under two thirds of people',
-  67: 'About two thirds of people',
-  75: 'About three quarters of people',
-  80: 'About four fifths of people',
-  81: 'Just over four fifths of people',
-  85: 'About six in seven people',  
-  90: 'About nine in ten people',
-  91: '{value}% of people',
+  9: '<strong>{value}%</strong> of people',
+  10: 'About <strong>one in ten</strong> people',
+  11: 'Over a <strong>tenth</strong> of people',
+  19: 'Just under a <strong>fifth</strong> of people',
+  20: 'About a <strong>fifth</strong> of people',
+  25: 'About a <strong>quarter</strong> of people',
+  33: 'About a <strong>third</strong> of people',
+  40: 'Over a <strong>third</strong> of people',
+  45: 'Less than <strong>half</strong> of people',
+  50: 'About <strong>half</strong> of people',
+  55: 'Over <strong>half</strong> of people',
+  60: 'Just under <strong>two thirds</strong> of people',
+  67: 'About <strong>two thirds</strong> of people',
+  75: 'About <strong>three quarters</strong> of people',
+  80: 'About <strong>four fifths</strong> of people',
+  85: 'About <strong>six in seven</strong> people',  
+  90: 'About <strong>nine in ten</strong> people',
+  91: '<strong>{value}%</strong> of people',
  })
 
  function generateText(newSlices){
@@ -81,21 +80,21 @@ function calculateSlices(input, data) {
 
   if (newSlices[0].name !== 'before') {
     console.log('first')
-     chosenText = `${findClosest(newSlices[0].value, descriptions)} go to bed at the same time as you`
-     afterText = `${findClosest(newSlices[1].value, descriptions)} go to bed later than you`
+     chosenText = `${findClosest(newSlices[0].value, descriptions)} go to bed at <strong>the same time</strong> as you`
+     afterText = `${findClosest(newSlices[1].value, descriptions)} go to bed <strong>later</strong> than you`
   }
   else if (newSlices[1].name === 'after') {
         console.log('second')
 
-     beforeText = `${findClosest(newSlices[0].value, descriptions)} go to bed earlier than you`
-     chosenText = `${findClosest(newSlices[1].value, descriptions)} go to bed at the same time as you`
+     beforeText = `${findClosest(newSlices[0].value, descriptions)} go to bed <strong>earlier</strong> than you`
+     chosenText = `${findClosest(newSlices[1].value, descriptions)} go to bed at <strong>the same time</strong> as you`
   }
   else {
         console.log('third')
 
-     beforeText = `${findClosest(newSlices[0].value, descriptions)} go to bed earlier than you`
-     chosenText = `${findClosest(newSlices[1].value, descriptions)} go to bed at the same time as you`
-     afterText = `${findClosest(newSlices[2].value, descriptions)} go to bed later than you`
+     beforeText = `${findClosest(newSlices[0].value, descriptions)} go to bed <strong>earlier</strong> than you`
+     chosenText = `${findClosest(newSlices[1].value, descriptions)} go to bed at <strong>the same time</strong> as you`
+     afterText = `${findClosest(newSlices[2].value, descriptions)} go to bed <strong>later</strong> than you`
   }
 
   return [beforeText, chosenText, afterText].filter(item => item !== undefined);
@@ -138,7 +137,7 @@ let textArray = $derived(generateText(newSlices))
 <div class="selected-option-container">
 <div class="sleep-option selected">{selected}
 </div>
-<span><a href="e">Choose another</a></span>
+<a href=".">Choose another</a>
 </div>
 {/if}
 <!-- <GeneralTimePicker03></GeneralTimePicker03> -->
@@ -155,13 +154,13 @@ let textArray = $derived(generateText(newSlices))
 <PieChart data={newSlices} {selected} {backgroundColor} bind:positions />
 {#if positions}
 <div  class="annotation top-left">
-<span class="annotation-text">{textArray[positions.topLeftIndex]}</span>
+<span class="annotation-text">{@html textArray[positions.topLeftIndex]}</span>
 </div>
 <div  class="annotation bottom-centre">
-<span class="annotation-text">{textArray[positions.bottomIndex]}</span>
+<span class="annotation-text">{@html textArray[positions.bottomIndex]}</span>
 </div>
 <div  class="annotation top-right">
-<span class="annotation-text">{textArray[positions.topRightIndex]}</span>
+<span class="annotation-text">{@html textArray[positions.topRightIndex]}</span>
 </div>
 {/if}
 
