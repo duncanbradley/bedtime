@@ -5,6 +5,9 @@
 
   let {data} = $props()
 
+  let positions = $state()
+  $inspect(positions)
+
   $inspect(data)
 
   let backgroundColor = "#2d2727"
@@ -131,7 +134,12 @@ let textArray = $derived(generateText(newSlices))
     </div>
   </div>
 </form>
-
+{:else}
+<div class="selected-option-container">
+<div class="sleep-option selected">{selected}
+</div>
+<span><a href="e">Choose another</a></span>
+</div>
 {/if}
 <!-- <GeneralTimePicker03></GeneralTimePicker03> -->
 
@@ -144,16 +152,18 @@ let textArray = $derived(generateText(newSlices))
 
 
 <div class="pie-container">
-<PieChart data={newSlices} {selected} {backgroundColor}/>
+<PieChart data={newSlices} {selected} {backgroundColor} bind:positions />
+{#if positions}
 <div  class="annotation top-left">
-<span class="annotation-text">{textArray[2]}</span>
+<span class="annotation-text">{textArray[positions.topLeftIndex]}</span>
 </div>
 <div  class="annotation bottom-centre">
-<span class="annotation-text">{textArray[1]}</span>
+<span class="annotation-text">{textArray[positions.bottomIndex]}</span>
 </div>
 <div  class="annotation top-right">
-<span class="annotation-text">{textArray[0]}</span>
+<span class="annotation-text">{textArray[positions.topRightIndex]}</span>
 </div>
+{/if}
 
 </div>
 <div>
@@ -261,6 +271,16 @@ font-family: 'Apfel Grotezk Fett'
     background: #f7fafc;
         color:#2d2727;
 
+  }
+  .sleep-option selected {
+
+
+  }
+
+  .selected-option-container{
+    display:flex;
+    align-items: center;
+    gap: 1em
   }
 
   input{
