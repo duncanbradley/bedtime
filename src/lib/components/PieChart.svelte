@@ -2,7 +2,7 @@
 
     import {arc, pie} from "d3-shape"
 
-    let {data, selected, backgroundColor, containerHeight=$bindable(0), containerWidth=$bindable(0)} = $props()
+    let {data, selected, backgroundColor, positions=$bindable(), containerHeight=$bindable(0), containerWidth=$bindable(0)} = $props()
 
 	const width = 200;
     const height = $derived(width);
@@ -95,10 +95,8 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight, pos
     else return '#e2b540'
   }
 
-  const positions = $derived(getSlicePositions(arcs));
-
-  $inspect({positions})
-
+positions = getSlicePositions(arcs)
+console.log(positions)
 
 </script>
 
@@ -129,7 +127,7 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight, pos
 			transform="translate({centroid})"
 			stroke="aliceblue"
 			stroke-width="1"
-			fill="RED"
+			fill="none"
 		/>
 	{/if}
 
