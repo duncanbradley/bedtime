@@ -5,114 +5,40 @@
 
   let {data} = $props()
 
-  let positions = $state()
-  $inspect(positions)
-
-  $inspect(data)
-
-  let backgroundColor = "#2d2727"
-
-  let options = [
-		{ id: "x1", text: "option1" },
-		{ id: "x2", text: "option2" },
-		{ id: "x3", text: "option3" },
-    { id: "x4", text: "option4" },
-		{ id: "x5", text: "option5" }
-	];
-
-function calculateSlices(input, data) {
-  const index = data.findIndex(item => item.Time === input);
-  if (index === -1) return [];
-
-  const before = data.slice(0, index).reduce((sum, item) => sum + item.Adjusted, 0);
-  const chosen = data[index].Adjusted;
-  const after  = data.slice(index + 1).reduce((sum, item) => sum + item.Adjusted, 0);
-
-  return [
-    { name: "before", value: before },
-    { name: data[index].Time, value: chosen },
-    { name: "after",  value: after  },
-  ].filter(({ value }) => value);
-}
 
  let selected = $state()
 
- let newSlices = $derived(calculateSlices(selected, data.sleep))
+ 
 
- $inspect(newSlices)
+function slugify(text) {
+    try {
+        if (typeof text !== 'string') {
+            throw new TypeError('Input must be a string');
+        }
 
- function findClosest(value, descriptions) {
-  const thresholds = Object.keys(descriptions).map(Number);
-  
-  const closestThreshold = thresholds.reduce((closest, current) => {
-    return Math.abs(current - value) < Math.abs(closest - value) 
-      ? current
-      : closest;
-  });
-
-  const template = descriptions[closestThreshold];
-  return template.replace('{value}', Math.round(value));
+        return text
+            .normalize('NFD')                     // Normalize accented characters
+            .replace(/[\u0300-\u036f]/g, '')       // Remove diacritics
+            .toLowerCase()                         // Convert to lowercase
+            .trim()                                // Remove leading/trailing spaces
+            .replace(/[^a-z0-9\s-]/g, '')          // Remove invalid chars
+            .replace(/\s+/g, '-')                  // Replace spaces with hyphens
+            .replace(/-+/g, '-');                  // Collapse multiple hyphens
+    } catch (error) {
+        console.error('Slugify error:', error.message);
+        return '';
+    }
 }
-
- let descriptions = $state({
-  9: '<strong>{value}%</strong> of people',
-  10: 'About <strong>one in ten</strong> people',
-  11: 'Over a <strong>tenth</strong> of people',
-  19: 'Just under a <strong>fifth</strong> of people',
-  20: 'About a <strong>fifth</strong> of people',
-  25: 'About a <strong>quarter</strong> of people',
-  33: 'About a <strong>third</strong> of people',
-  40: 'Over a <strong>third</strong> of people',
-  45: 'Less than <strong>half</strong> of people',
-  50: 'About <strong>half</strong> of people',
-  55: 'Over <strong>half</strong> of people',
-  60: 'Just under <strong>two thirds</strong> of people',
-  67: 'About <strong>two thirds</strong> of people',
-  75: 'About <strong>three quarters</strong> of people',
-  80: 'About <strong>four fifths</strong> of people',
-  85: 'About <strong>six in seven</strong> people',  
-  90: 'About <strong>nine in ten</strong> people',
-  91: '<strong>{value}%</strong> of people',
- })
-
- function generateText(newSlices){
-    let beforeText, chosenText, afterText;
-
-  if (newSlices[0].name !== 'before') {
-    console.log('first')
-     chosenText = `${findClosest(newSlices[0].value, descriptions)} go to bed at <strong>the same time</strong> as you`
-     afterText = `${findClosest(newSlices[1].value, descriptions)} go to bed <strong>later</strong> than you`
-  }
-  else if (newSlices[1].name === 'after') {
-        console.log('second')
-
-     beforeText = `${findClosest(newSlices[0].value, descriptions)} go to bed <strong>earlier</strong> than you`
-     chosenText = `${findClosest(newSlices[1].value, descriptions)} go to bed at <strong>the same time</strong> as you`
-  }
-  else {
-        console.log('third')
-
-     beforeText = `${findClosest(newSlices[0].value, descriptions)} go to bed <strong>earlier</strong> than you`
-     chosenText = `${findClosest(newSlices[1].value, descriptions)} go to bed at <strong>the same time</strong> as you`
-     afterText = `${findClosest(newSlices[2].value, descriptions)} go to bed <strong>later</strong> than you`
-  }
-
-  return [beforeText, chosenText, afterText].filter(item => item !== undefined);
-
- }
-
-let textArray = $derived(generateText(newSlices))
-
 
 </script>
 
 <div class="page">
 <div class="content">
 
-<h1 id="question">
+<!-- <h1 id="question">
   What time do you go to bed?
     <span>On average</span>
-</h1>
+</h1> -->
 
 {#if !selected}
 <form>
@@ -127,7 +53,7 @@ let textArray = $derived(generateText(newSlices))
             value={option.Time}
             bind:group={selected}
           />
-          {option.Time}
+          {slugify(option.Time)}
         </label>
       {/each}
     </div>
@@ -135,41 +61,24 @@ let textArray = $derived(generateText(newSlices))
 </form>
 {:else}
 <div class="selected-option-container">
+  <button>Back</button>
+
 <div class="sleep-option selected">{selected}
 </div>
-<a href=".">Choose another</a>
 </div>
 {/if}
 <!-- <GeneralTimePicker03></GeneralTimePicker03> -->
 
 
- {#if selected}
+<nav aria-label="Related pages">
+  <ul>
+    {#each data.sleep as option (option.Time)}
+    <li><a href={slugify(option.Time)}>{option.Time}</a></li>
+    {/each}
+  </ul>
+</nav>
 
- <!-- up to 10pm, use L+R for first two labels -->
- <!-- between, use center for main label -->
-<!-- from around midnight, use R+L for first two label -->
 
-
-<div class="pie-container">
-<PieChart data={newSlices} {selected} {backgroundColor} bind:positions />
-{#if positions}
-<div  class="annotation top-left">
-<span class="annotation-text">{@html textArray[positions.topLeftIndex]}</span>
-</div>
-<div  class="annotation bottom-centre">
-<span class="annotation-text">{@html textArray[positions.bottomIndex]}</span>
-</div>
-<div  class="annotation top-right">
-<span class="annotation-text">{@html textArray[positions.topRightIndex]}</span>
-</div>
-{/if}
-
-</div>
-<div>
-<span class="source">British adults. Excludes 'Don't know'. Source: YouGov (2022)</span>
-</div>
-
-{/if}
 </div>
 </div>
 
@@ -250,14 +159,14 @@ font-family: 'Apfel Grotezk Fett'
 }
 
  .sleep-options {
-    display: flex;
-    /* flex-direction: column; */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
     margin-top: 1rem;
   }
 
   .sleep-option {
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 1rem;
     border: 2px solid aliceblue;
     border-radius: 0.5rem;
     cursor: pointer;
@@ -286,6 +195,29 @@ font-family: 'Apfel Grotezk Fett'
     display:none
   }
 
+  a:link {
+  color: aliceblue;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: aliceblue;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: aliceblue;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:active {
+  color: lightskyblue;
+  background-color: transparent;
+  text-decoration: underline;
+}
 
   @font-face {
     font-family: 'Apfel Grotezk Fett';
