@@ -101,12 +101,10 @@ let textArray = $derived(generateText(newSlices))
   </script>
   
   <h1>{selected}</h1>
+  <a href='/'>Back</a>
 
   {#if selected}
 
-  <!-- up to 10pm, use L+R for first two labels -->
-  <!-- between, use center for main label -->
- <!-- from around midnight, use R+L for first two label -->
  
  
  <div class="pie-container">
@@ -205,67 +203,42 @@ let textArray = $derived(generateText(newSlices))
              max-width: 14em;
     
     }
+
+     .sleep-option selected {
+
+
+  }
+
+  .selected-option-container{
+    display:flex;
+    align-items: center;
+    gap: 1em
+  }
     
-     .sleep-options {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.5rem;
-        margin-top: 1rem;
-      }
+   a:link {
+  color: aliceblue;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: aliceblue;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: aliceblue;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:active {
+  color: lightskyblue;
+  background-color: transparent;
+  text-decoration: underline;
+}
     
-      .sleep-option {
-        padding: 0.5rem 1rem;
-        border: 2px solid aliceblue;
-        border-radius: 0.5rem;
-        cursor: pointer;
-        color: aliceblue;
-        font-family: 'Apfel Grotezk Regular';
-        font-size: 1em
-      }
-    
-      .sleep-option:hover {
-        background: #f7fafc;
-            color:#2d2727;
-    
-      }
-      .sleep-option selected {
-    
-    
-      }
-    
-      .selected-option-container{
-        display:flex;
-        align-items: center;
-        gap: 1em
-      }
-    
-      input{
-        display:none
-      }
-    
-      a:link {
-      color: aliceblue;
-      background-color: transparent;
-      text-decoration: none;
-    }
-    
-    a:visited {
-      color: aliceblue;
-      background-color: transparent;
-      text-decoration: none;
-    }
-    
-    a:hover {
-      color: aliceblue;
-      background-color: transparent;
-      text-decoration: underline;
-    }
-    
-    a:active {
-      color: lightskyblue;
-      background-color: transparent;
-      text-decoration: underline;
-    }
     
       @font-face {
         font-family: 'Apfel Grotezk Fett';
