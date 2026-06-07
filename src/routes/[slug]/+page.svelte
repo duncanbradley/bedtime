@@ -100,12 +100,12 @@
   let textArray = $derived(generateText(newSlices));
 </script>
 
+<div class="content">
 <div class="selected-option-container">
   <a href="/">&lt; Back</a>
   <div class="sleep-option selected">{selected}</div>
 </div>
 
-{#if selected}
   <div class="pie-container">
     <PieChart data={newSlices} {selected} {backgroundColor} bind:positions />
     {#if positions}
@@ -125,13 +125,11 @@
         >
       </div>
     {/if}
-  </div>
-  <div>
+    </div>
     <span class="source"
       >British adults. Excludes 'Don't know'. Source: YouGov (2022)</span
     >
-  </div>
-{/if}
+</div>
 
 <style>
   p {
@@ -151,6 +149,8 @@
     color: white;
     font-size: 0.8em;
     text-align: right;
+    display: inline-block;
+
   }
   .pie-container {
     position: relative;
@@ -160,6 +160,11 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 1em;
+  }
+  .content{
+  align-items: center;
+  display: flex;
+  flex-direction: column;
   }
 
   .annotation {
@@ -204,6 +209,7 @@
     display: flex;
     align-items: center;
     gap: 1em;
+    margin-bottom: 0.5em
   }
 
   a {
