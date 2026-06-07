@@ -32,4 +32,9 @@ font-family: 'Apfel Grotezk Fett'
   justify-content: center;
   align-items: center;
 }
+  span {
+    color: aliceblue;
+    font-family: "Apfel Grotezk Regular";
+    font-size: 1.2rem;
+  }
 </style>
