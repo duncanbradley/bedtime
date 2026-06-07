@@ -1,10 +1,5 @@
 <script lang="ts">
-  import PieChart from "../lib/components/PieChart.svelte";
-  import GeneralTimePicker03 from "$lib/components/GeneralTimePicker03.svelte";
-
   let { data } = $props();
-
-  let selected = $state();
 
   function slugify(text) {
     try {
@@ -27,7 +22,7 @@
   }
 </script>
 
-<nav>
+<nav >
   <ul class="sleep-options">
     {#each data.sleep as option (option.Time)}
       <li >
@@ -49,6 +44,7 @@
 
   .sleep-option {
     padding: 0.5rem 1rem;
+    display: block;
     border: 2px solid aliceblue;
     border-radius: 0.5rem;
     color: aliceblue;
