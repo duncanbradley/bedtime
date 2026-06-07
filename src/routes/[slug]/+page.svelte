@@ -102,7 +102,7 @@
 
 <div class="content">
 <div class="selected-option-container">
-  <a href="/">&lt; Back</a>
+  <a class="back-link" href="/">&lt; Back</a>
   <div class="sleep-option selected">{selected}</div>
 </div>
 
@@ -196,6 +196,24 @@
     max-width: 14em;
   }
 
+  .selected-option-container {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 0.5em;
+  width: 100%;
+  position: relative;
+  justify-content: center;
+}
+
+.back-link{
+    margin-right: auto; /* Pushes the next item to the center */
+    position: absolute;
+    min-width:4em;
+            top: 75%;
+            left: 0%;
+            transform: translate(-0%, -100%);
+}
+
   .sleep-option.selected {
     padding: 0.5rem 1rem;
     border: 2px solid aliceblue;
@@ -203,13 +221,7 @@
     color: aliceblue;
     font-family: "Apfel Grotezk Regular";
     font-size: 1em;
-  }
 
-  .selected-option-container {
-    display: flex;
-    align-items: center;
-    gap: 1em;
-    margin-bottom: 0.5em
   }
 
   a {
