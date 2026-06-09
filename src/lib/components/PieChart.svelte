@@ -28,7 +28,7 @@ function getSlicePositions(arcs) {
     return { topRightIndex, topLeftIndex, bottomIndex };
 }
 
-function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight, positions) {
+function getConnectorPath(arcs, sliceIndex, width, height, positions) {
     const arc = arcs[sliceIndex];
     const [positionX, positionY] = arcLabel.centroid(arc);
     
@@ -47,7 +47,7 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight, pos
     
     // Special case: bottom slice goes straight down
     if (isBottomSlice) {
-        const verticalDistance = containerHeight - positionY - BOTTOM_OFFSET;
+        const verticalDistance = height - positionY - BOTTOM_OFFSET;
         return `M0,0 L0,${verticalDistance}`;
     }
     
@@ -55,17 +55,17 @@ function getConnectorPath(arcs, sliceIndex, containerWidth, containerHeight, pos
     
     // Calculate horizontal offset: right goes right, left goes left
     const hOffset = isRightSlice
-        ? containerWidth - positionX - SIDE_MARGIN
-        : -(containerWidth - Math.abs(positionX) - SIDE_MARGIN);
+        ? width - positionX - SIDE_MARGIN
+        : -(width - Math.abs(positionX) - SIDE_MARGIN);
     
     // Route based on angle
     if (!isSteeplyAngled) {
         // Vertical-first path: go down, then horizontal
-        const vEnd = -containerHeight - positionY + VERTICAL_OFFSET;
+        const vEnd = -height - positionY + VERTICAL_OFFSET;
         return `M0,0 L0,${vEnd} L${hOffset},${vEnd}`;
     } else {
         // Angled-first path: go horizontal, then down
-        const vEnd = -containerHeight / 2 - positionY + ANGLED_VERTICAL_OFFSET;
+        const vEnd = -height / 2 - positionY + ANGLED_VERTICAL_OFFSET;
         return `M0,0 L${hOffset},0 L${hOffset},${vEnd}`;
     }
 }
@@ -103,8 +103,8 @@ console.log(positions)
 <div class="svg-wrapper" bind:clientWidth={containerWidth} bind:clientHeight={containerHeight}>
 
 <svg
-  {width}
-  {height}
+  width={width/2}
+  height={height/2}
   viewBox="{-width / 2}, {-height / 2}, {width}, {height}"
   style:max-width="100%"
   style:height="auto"
@@ -131,25 +131,17 @@ console.log(positions)
 		/>
 	{/if}
 
-			 <!-- <text
-				style="font-weight: bold"
-				transform="translate({arcLabel.centroid(slice)})"
-				text-anchor="middle"
-				>
-				x
-			</text>  -->
-			
-			<!-- {#if (slice.endAngle - slice.startAngle) > 0.25}
-				<text
-					text-anchor="middle"
-					transform="translate({[arcLabel.centroid(slice)[0], arcLabel.centroid(slice)[1] + 10]})"
-					>
-					{slice.data.value.toLocaleString("en-US")}
-				</text>
-			{/if} -->
+	
 		{/each}
 	</g>
 </svg>
+</div>
+
+<div style="position:absolute">
+    <p>containerHeight: {containerHeight}</p>
+<p>containerWidth: {containerWidth}</p>
+<p>width: {width}</p>
+<p>height: {height}</p>
 </div>
 
 <style>
@@ -162,5 +154,9 @@ console.log(positions)
   justify-content: center;
   align-items: center;
   overflow: visible;
+  border: 1px solid salmon
+}
+p{
+    color:aliceblue
 }
 </style>

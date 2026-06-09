@@ -155,7 +155,7 @@
   .pie-container {
     position: relative;
     padding: 5em 5em 6.5em 5em;
-    border: 1px solid;
+    border: 1px solid pink;
     display: flex;
     justify-content: center;
     align-items: center;
