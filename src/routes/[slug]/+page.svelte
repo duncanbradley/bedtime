@@ -170,7 +170,7 @@
     max-width: 6.1em;
     /* background-color: red; */
     background-color: #2d2727;
-    padding: 0.5em;
+    padding: 0.05em;
   }
 
   .annotation-text {
