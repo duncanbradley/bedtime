@@ -4,7 +4,7 @@
 
     let {data, selected, backgroundColor, positions=$bindable(), containerHeight=$bindable(0), containerWidth=$bindable(0)} = $props()
 
-	const width = 200;
+	const width = 350;
     const height = $derived(width);
 	
 function getSlicePositions(arcs) {
