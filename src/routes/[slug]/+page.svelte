@@ -14,6 +14,8 @@
 
   let selected = formatString(page.params.slug);
   let positions = $state();
+  let colors = $state(['#116bab','#16913a','#e2b540']);
+
 
   let backgroundColor = "#2d2727";
 
@@ -75,21 +77,18 @@
   function generateText(newSlices) {
     let beforeText, chosenText, afterText;
 
-    if (newSlices[0].name !== "before") {
-      console.log("first");
-      chosenText = `${findClosest(newSlices[0].value, descriptions)} go to bed at <strong>the same time</strong> as you`;
-      afterText = `${findClosest(newSlices[1].value, descriptions)} go to bed <strong>later</strong> than you`;
-    } else if (newSlices[1].name === "after") {
-      console.log("second");
+    if (newSlices.length === 2) {
+      if (newSlices[0].name !== "before") {
+      chosenText = `${findClosest(newSlices[0].value, descriptions)} go to bed at <strong style="color: ${colors[1]}">the same time</strong> as you`;
+      afterText = `${findClosest(newSlices[1].value, descriptions)} go to bed <strong style="color: ${colors[2]}">later</strong> than you`;
+    } else  {
+      beforeText = `${findClosest(newSlices[0].value, descriptions)} go to bed <strong style="color: ${colors[0]}">earlier</strong> than you`;
+      chosenText = `${findClosest(newSlices[1].value, descriptions)} go to bed at <strong style="color: ${colors[1]}">the same time</strong> as you`;
+    }} else {
 
-      beforeText = `${findClosest(newSlices[0].value, descriptions)} go to bed <strong>earlier</strong> than you`;
-      chosenText = `${findClosest(newSlices[1].value, descriptions)} go to bed at <strong>the same time</strong> as you`;
-    } else {
-      console.log("third");
-
-      beforeText = `${findClosest(newSlices[0].value, descriptions)} go to bed <strong>earlier</strong> than you`;
-      chosenText = `${findClosest(newSlices[1].value, descriptions)} go to bed at <strong>the same time</strong> as you`;
-      afterText = `${findClosest(newSlices[2].value, descriptions)} go to bed <strong>later</strong> than you`;
+      beforeText = `${findClosest(newSlices[0].value, descriptions)} go to bed <strong style="color: ${colors[0]}">earlier</strong> than you`;
+      chosenText = `${findClosest(newSlices[1].value, descriptions)} go to bed at <strong style="color: ${colors[1]}">the same time</strong> as you`;
+      afterText = `${findClosest(newSlices[2].value, descriptions)} go to bed <strong style="color: ${colors[2]}">later</strong> than you`;
     }
 
     return [beforeText, chosenText, afterText].filter(
@@ -141,7 +140,6 @@
     font-family: "Apfel Grotezk Regular";
   }
   span {
-    opacity: 0.8;
     font-family: "Apfel Grotezk Regular";
     font-size: 1.2rem;
   }
@@ -155,11 +153,11 @@
   .pie-container {
     position: relative;
     padding: 5em 5em 6.5em 5em;
-    border: 1px solid pink;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 1em;
+    margin-right: 1em
   }
   .content{
   align-items: center;
@@ -170,21 +168,24 @@
   .annotation {
     position: absolute;
     max-width: 6em;
+    /* background-color: red; */
+    background-color: #2d2727;
+    padding: 0.5em;
   }
 
   .annotation-text {
-    font-size: 0.8em;
+    font-size: 0.9em;
   }
 
   .annotation.top-right {
-    top: 1em;
-    right: 1em;
+    top: 0.5em;
+    right: 0.5em;
     text-align: right;
   }
 
   .annotation.top-left {
-    top: 1em;
-    left: 1em;
+    top: 0.5em;
+    left: 0.5em;
     text-align: left;
   }
 
@@ -193,7 +194,7 @@
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
-    max-width: 14em;
+    min-width: 14em;
   }
 
   .selected-option-container {
@@ -216,7 +217,7 @@
 
   .sleep-option.selected {
     padding: 0.5rem 1rem;
-    border: 2px solid aliceblue;
+    border: 1.5px solid aliceblue;
     border-radius: 0.5rem;
     color: aliceblue;
     font-family: "Apfel Grotezk Regular";
