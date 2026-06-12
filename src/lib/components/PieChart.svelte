@@ -4,7 +4,7 @@
 
     let {data, selected, backgroundColor, positions=$bindable(), containerHeight=$bindable(0), containerWidth=$bindable(0)} = $props()
 
-	const width = 350;
+	const width = 200;
     const height = $derived(width);
 	
 function getSlicePositions(arcs) {
@@ -33,10 +33,10 @@ function getConnectorPath(arcs, sliceIndex, width, height, positions) {
     const [positionX, positionY] = arcLabel.centroid(arc);
     
     // Configuration constants
-    const BOTTOM_OFFSET = 55;
+    const BOTTOM_OFFSET = 45;
     const SIDE_MARGIN = 40;
     const VERTICAL_OFFSET = 45;
-    const ANGLED_VERTICAL_OFFSET = 20;
+    const ANGLED_VERTICAL_OFFSET = -30;
     const ANGLE_THRESHOLD = 45;
     
     // Calculate derived values
@@ -96,7 +96,6 @@ function getConnectorPath(arcs, sliceIndex, width, height, positions) {
   }
 
 positions = getSlicePositions(arcs)
-console.log(positions)
 
 </script>
 
@@ -117,6 +116,7 @@ console.log(positions)
 		d={arcPath(slice)}
 		fill={assignColor(i, slice.data)}
 		stroke={backgroundColor}
+        stroke-width={3}
 	/>
 
 	{#if containerWidth && containerHeight}
@@ -126,8 +126,9 @@ console.log(positions)
 			d={pathD}
 			transform="translate({centroid})"
 			stroke="aliceblue"
-			stroke-width="1"
+			stroke-width="2"
 			fill="none"
+            stroke-linejoin="round"
 		/>
 	{/if}
 
@@ -137,26 +138,24 @@ console.log(positions)
 </svg>
 </div>
 
-<div style="position:absolute">
+<!-- <div style="position:absolute">
     <p>containerHeight: {containerHeight}</p>
 <p>containerWidth: {containerWidth}</p>
 <p>width: {width}</p>
 <p>height: {height}</p>
-</div>
+</div> -->
 
 <style>
 	svg {
 		font-size: 3em;
 		overflow: visible;
+        width:200px
 	}
 	.svg-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: visible;
-  border: 1px solid salmon;
-  width: 150px;
-  height: 150px
 }
 p{
     color:aliceblue
