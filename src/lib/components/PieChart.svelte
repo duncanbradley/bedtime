@@ -90,8 +90,8 @@ function getConnectorPath(arcs, sliceIndex, width, height, positions) {
   const arcs = $derived(pieLayout(data))
 
   function assignColor(i, sliceData) {
-    if (i === 0 && sliceData.name !== selected) return '#116bab'
-    else if (sliceData.name === selected) return '#16913a'
+    if (i === 0 && sliceData.name !== selected) return '#2981BF'
+    else if (sliceData.name === selected) return '#29B051'
     else return '#e2b540'
   }
 

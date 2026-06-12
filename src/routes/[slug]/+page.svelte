@@ -14,8 +14,7 @@
 
   let selected = formatString(page.params.slug);
   let positions = $state();
-  let colors = $state(['#116bab','#16913a','#e2b540']);
-
+  let colors = $state(['#2981BF','#29B051','#e2b540']);
 
   let backgroundColor = "#2d2727";
 
@@ -40,7 +39,7 @@
 
   let newSlices = $derived(calculateSlices(selected, data.sleep));
 
-  function findClosest(value, descriptions) {
+  function findClosest(value, descriptions, color) {
     const thresholds = Object.keys(descriptions).map(Number);
 
     const closestThreshold = thresholds.reduce((closest, current) => {
@@ -50,13 +49,15 @@
     });
 
     const template = descriptions[closestThreshold];
-    return template.replace("{value}", Math.round(value));
+    return template
+  .replace("<strong>", `<strong style="color: ${color}">`)
+  .replace("{value}", Math.round(value));
   }
 
   let descriptions = $state({
     9: "<strong>{value}%</strong> of people",
     10: "About <strong>one in ten</strong> people",
-    11: "Over a <strong>tenth</strong> of people",
+    11: "Just over a <strong>tenth</strong> of people",
     19: "Less than a <strong>fifth</strong> of people",
     20: "About a <strong>fifth</strong> of people",
     25: "About a <strong>quarter</strong> of people",
@@ -79,16 +80,15 @@
 
     if (newSlices.length === 2) {
       if (newSlices[0].name !== "before") {
-      chosenText = `${findClosest(newSlices[0].value, descriptions)} go to bed at <strong style="color: ${colors[1]}">the same time</strong> as you`;
-      afterText = `${findClosest(newSlices[1].value, descriptions)} go to bed <strong style="color: ${colors[2]}">later</strong> than you`;
+      chosenText = `${findClosest(newSlices[0].value, descriptions, colors[1])} go to bed at <strong style="color: ${colors[1]}">the same time</strong> as you`;
+      afterText = `${findClosest(newSlices[1].value, descriptions, colors[2])} go to bed <strong style="color: ${colors[2]}">later</strong> than you`;
     } else  {
-      beforeText = `${findClosest(newSlices[0].value, descriptions)} go to bed <strong style="color: ${colors[0]}">earlier</strong> than you`;
-      chosenText = `${findClosest(newSlices[1].value, descriptions)} go to bed at <strong style="color: ${colors[1]}">the same time</strong> as you`;
+      beforeText = `${findClosest(newSlices[0].value, descriptions, colors[0])} go to bed <strong style="color: ${colors[0]}">earlier</strong> than you`;
+      chosenText = `${findClosest(newSlices[1].value, descriptions, colors[1])} go to bed at <strong style="color: ${colors[1]}">the same time</strong> as you`;
     }} else {
-
-      beforeText = `${findClosest(newSlices[0].value, descriptions)} go to bed <strong style="color: ${colors[0]}">earlier</strong> than you`;
-      chosenText = `${findClosest(newSlices[1].value, descriptions)} go to bed at <strong style="color: ${colors[1]}">the same time</strong> as you`;
-      afterText = `${findClosest(newSlices[2].value, descriptions)} go to bed <strong style="color: ${colors[2]}">later</strong> than you`;
+      beforeText = `${findClosest(newSlices[0].value, descriptions, colors[0])} go to bed <strong style="color: ${colors[0]}">earlier</strong> than you`;
+      chosenText = `${findClosest(newSlices[1].value, descriptions, colors[1])} go to bed at <strong style="color: ${colors[1]}">the same time</strong> as you`;
+      afterText = `${findClosest(newSlices[2].value, descriptions, colors[2])} go to bed <strong style="color: ${colors[2]}">later</strong> than you`;
     }
 
     return [beforeText, chosenText, afterText].filter(
@@ -167,7 +167,7 @@
 
   .annotation {
     position: absolute;
-    max-width: 6em;
+    max-width: 6.1em;
     /* background-color: red; */
     background-color: #2d2727;
     padding: 0.5em;
