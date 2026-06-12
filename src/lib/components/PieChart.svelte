@@ -154,7 +154,9 @@ console.log(positions)
   justify-content: center;
   align-items: center;
   overflow: visible;
-  border: 1px solid salmon
+  border: 1px solid salmon;
+  width: 150px;
+  height: 150px
 }
 p{
     color:aliceblue
