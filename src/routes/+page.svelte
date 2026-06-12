@@ -36,20 +36,21 @@
   .sleep-options {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.3rem;
+    gap: 0.5rem;
     margin-top: 1rem;
     list-style-type: none;
     padding: 0em;
+    margin-right: 1em;
   }
 
   .sleep-option {
     padding: 0.5rem 1rem;
     display: block;
-    border: 2px solid aliceblue;
+    border: 1.5px solid aliceblue;
     border-radius: 0.5rem;
     color: aliceblue;
     font-family: "Apfel Grotezk Regular";
-    font-size: 1em;
+    font-size: 1.1em;
   }
 
   .sleep-option:hover {
