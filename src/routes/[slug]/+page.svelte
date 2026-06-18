@@ -101,7 +101,7 @@
 
 <div class="content">
 <div class="selected-option-container">
-  <a class="back-link" href="/">&lt; Back</a>
+  <a class="back-link" href="/bedtime">&lt; Back</a>
   <div class="sleep-option selected">{selected}</div>
 </div>
 
