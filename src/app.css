@@ -1,0 +1,14 @@
+@layer base {
+	@font-face {
+        font-family: "Apfel Grotezk Fett";
+        src: url("/fonts/ApfelGrotezk-Fett.otf") format("opentype");
+		font-weight: normal;
+		font-display: swap;
+	}
+	@font-face {
+        font-family: "Apfel Grotezk Regular";
+        src: url("/fonts/ApfelGrotezk-Regular.otf") format("opentype");
+		font-weight: bold;
+		font-display: swap;
+	}
+}
