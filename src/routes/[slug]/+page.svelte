@@ -1,6 +1,8 @@
 <script>
   import { page } from "$app/state";
   import PieChart from "$lib/components/PieChart.svelte";
+  import { base } from '$app/paths';
+
 
   let { data } = $props();
 
@@ -105,7 +107,7 @@
 
 <div class="content">
 <div class="selected-option-container">
-  <a class="back-link" href="/bedtime">&lt; Back</a>
+  <a class="back-link" href="{base}/">&lt; Back</a>
   <div class="sleep-option selected">{selected}</div>
 </div>
 
