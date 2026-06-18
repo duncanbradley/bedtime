@@ -13,7 +13,7 @@
   }
 
   let selected = formatString(page.params.slug);
-  let positions = $state();
+  let positions = $state({topRightIndex: 1, topLeftIndex: 0, bottomIndex: 2});
   let colors = $state(['#2981BF','#29B051','#e2b540']);
 
   let backgroundColor = "#2d2727";
@@ -76,6 +76,10 @@
   });
 
   function generateText(newSlices) {
+    if (!newSlices || newSlices.length === 0) {
+      return ['beforeText', 'chosenText', 'afterText'];
+    }
+
     let beforeText, chosenText, afterText;
 
     if (newSlices.length === 2) {

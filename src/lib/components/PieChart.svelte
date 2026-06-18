@@ -8,6 +8,11 @@
     const height = $derived(width);
 	
 function getSlicePositions(arcs) {
+
+    if (!arcs || arcs.length === 0) {
+      return { topRightIndex: -1, topLeftIndex: -1, bottomIndex: -1 };
+    }
+
     const bottomMostSlice = arcs.reduce((closest, current) => {
         const currentY = arcLabel.centroid(current)[1];
         const closestY = arcLabel.centroid(closest)[1];
@@ -95,7 +100,7 @@ function getConnectorPath(arcs, sliceIndex, width, height, positions) {
     else return '#e2b540'
   }
 
-positions = getSlicePositions(arcs)
+ positions = getSlicePositions(arcs)
 
 </script>
 
