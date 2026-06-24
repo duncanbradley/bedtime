@@ -22,6 +22,8 @@
   }
 </script>
 
+<p>Find out how you compare to other people:</p>
+
 <nav >
   <ul class="sleep-options">
     {#each data.sleep as option (option.Time)}
@@ -56,6 +58,11 @@
   .sleep-option:hover {
     background: #f7fafc;
     color: #2d2727;
+  }
+
+  p {
+    color: aliceblue;
+    font-family: "Apfel Grotezk Regular";
   }
 
   @font-face {
