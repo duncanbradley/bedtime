@@ -105,6 +105,14 @@
   let textArray = $derived(generateText(newSlices));
 </script>
 
+<svelte:head>
+	<title>{selected} | What time do you go to bed?</title>
+	<meta
+		name="description"
+		content="Your bedtime is {selected}. See how this compares to other people."
+	/>
+</svelte:head>
+
 <div class="content">
 <div class="selected-option-container">
   <a class="back-link" href="{base}/">&lt; Back</a>

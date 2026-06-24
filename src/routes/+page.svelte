@@ -22,6 +22,14 @@
   }
 </script>
 
+<svelte:head>
+	<title>What time do you go to bed?</title>
+	<meta
+		name="description"
+		content="Choose your bedtime and see how it compares to other people."
+	/>
+</svelte:head>
+
 <p>Find out how you compare to other people:</p>
 
 <nav >
