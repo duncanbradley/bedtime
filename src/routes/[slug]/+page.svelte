@@ -16,7 +16,7 @@
 
   let selected = formatString(page.params.slug);
   let positions = $state({topRightIndex: 1, topLeftIndex: 0, bottomIndex: 2});
-  let colors = $state(['#2981BF','#29B051','#e2b540']);
+  let colors = $state(['#EDF1F7','#5678A4','#40456a']);
 
   let backgroundColor = "#2d2727";
 
@@ -120,7 +120,7 @@
 </div>
 
   <div class="pie-container">
-    <PieChart data={newSlices} {selected} {backgroundColor} bind:positions />
+    <PieChart data={newSlices} {selected} {backgroundColor} bind:positions {colors}/>
     {#if positions}
       <div class="annotation top-left">
         <span class="annotation-text"

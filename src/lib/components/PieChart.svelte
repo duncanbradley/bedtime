@@ -2,7 +2,7 @@
 
     import {arc, pie} from "d3-shape"
 
-    let {data, selected, backgroundColor, positions=$bindable(), containerHeight=$bindable(0), containerWidth=$bindable(0)} = $props()
+    let {data, selected, backgroundColor, positions=$bindable(), containerHeight=$bindable(0), containerWidth=$bindable(0), colors} = $props()
 
 	const width = 245;
     const height = $derived(width);
@@ -95,9 +95,9 @@ function getConnectorPath(arcs, sliceIndex, width, height, positions) {
   const arcs = $derived(pieLayout(data))
 
   function assignColor(i, sliceData) {
-    if (i === 0 && sliceData.name !== selected) return '#2981BF'
-    else if (sliceData.name === selected) return '#29B051'
-    else return '#e2b540'
+    if (i === 0 && sliceData.name !== selected) return colors[0]
+    else if (sliceData.name === selected) return colors[1]
+    else return colors[2]
   }
 
  positions = getSlicePositions(arcs)
@@ -120,7 +120,7 @@ function getConnectorPath(arcs, sliceIndex, width, height, positions) {
 			<path 
 		d={arcPath(slice)}
 		fill={assignColor(i, slice.data)}
-		stroke={backgroundColor}
+		stroke="aliceblue"
         stroke-width={3}
 	/>
 
